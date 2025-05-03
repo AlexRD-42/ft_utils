@@ -1,25 +1,23 @@
 #include "profiler.h"
+#include <string.h>
 
 #define num_runs 100
-#define num_iter 40
-#define fnc	2
+#define num_iter 1
+#define fnc	4
 
 // Switch to enums
-#define fn0 ft_fibonacci
-#define fn1 ft_rfibonacci
-#define fn2
-#define fn3
-#define FN_NAME(n) fn##n
-#define printfn(x) printf("%s: %f ns\n", TOSTRING(FN_NAME(x)), printns(get_avg(results[x], num_runs)));
+#define fn0 ft_memcpy
+#define fn1 ft_bytecpy
+#define fn2 memcpy
+#define fn3 ft_memcpy2
 
 static float	resf = 0.0f;
 static int32_t	resi = 0;
 static int64_t	resl = 0;
 
-int64_t	ft_fibonacci(int64_t index);
-int64_t	ft_rfibonacci(int64_t index);
-// void		fn2();
-// void		fn3();
+void	*ft_memcpy(void *restrict dst_void, const void *restrict src_void, size_t length);
+void	*ft_bytecpy(void *dst_void, const void *src_void, size_t length);
+void	*ft_memcpy2(void *dst_void, const void *src_void, size_t length);
 
 void	res_set(void)
 {
@@ -28,28 +26,33 @@ void	res_set(void)
 	resl = 0;
 }
 
+#define array_len 4000
 uint64_t benchmark_rng(uint32_t fn_index)
 {
 	res_set();
-	uint64_t start = ns();
+	char dst[array_len];
+	char src[array_len];
 
+	for (size_t i=0;i<array_len;i++)
+		src[i] = (uint8_t) rand();
+	uint64_t start = ns();
 	switch (fn_index)
 	{
 		case 0:
 			for (uint64_t i = 0; i < num_iter; i++)
-				fn0(resl++);
+				fn0(dst, src, array_len);
 			break;
 		case 1:
 			for (uint64_t i = 0; i < num_iter; i++)
-				fn1(resl++);;
+				fn1(dst, src, array_len);
 			break;
 		case 2:
 			for (uint64_t i = 0; i < num_iter; i++)
-				;
+				fn2(dst, src, array_len);
 			break;
 		case 3:
 			for (uint64_t i = 0; i < num_iter; i++)
-				;
+				fn3(dst, src, array_len);
 			break;
 		default:
 			break;
@@ -68,7 +71,7 @@ double get_avg(uint64_t *ptr, uint64_t n)
 int main()
 {
 	uint32_t i, start, fn_index;
-	uint64_t (*results)[num_runs] = malloc(num_runs * fnc * sizeof(uint64_t));
+	uint64_t (*results)[num_runs] = calloc(num_runs * fnc, sizeof(uint64_t));
 
 	srand(ns());
 	for (uint64_t run = 0; run < num_runs; run++) 
@@ -81,7 +84,7 @@ int main()
 		}
     }
 	for (i = 0; i < fnc; i++)
-		printfn(i);
+		printf("Function %d: %f ns\n", i, printns(get_avg(results[i], num_runs)));
 	printf("\n%f, %d, %lld", resf, resi, resl);
 	free(results);
 }
