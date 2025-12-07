@@ -6,13 +6,12 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 16:39:41 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/07 20:33:42 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/12/02 20:40:59 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
 #include <stddef.h>
-#include "libft_memory.h"
 
 void	ft_swap(void *a_void, void *b_void, size_t length)
 {

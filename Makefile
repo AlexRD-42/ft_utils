@@ -5,11 +5,11 @@ BUILD_PATH = build
 INC_PATH = includes
 OBJ_PATH = $(BUILD_PATH)/obj
 BIN = $(BUILD_PATH)/$(NAME)
-VPATH = sources sources/utils 
+VPATH = sources sources/utils sources/exam
 
 # Files --------------------------------------- #
 LIBS =
-SRCS = 
+SRCS = combn.c
 BONUS_SRCS = 
 OBJS = $(addprefix $(OBJ_PATH)/, $(SRCS:.c=.o))
 
@@ -17,7 +17,7 @@ OBJS = $(addprefix $(OBJ_PATH)/, $(SRCS:.c=.o))
 CC = clang
 CFLAGS = -Wall -Wextra $(addprefix -I,$(INC_PATH)) -flto -fstrict-aliasing -pthread
 LFLAGS =
-DEBUG = -g -Wpedantic -Wcast-qual -Wfloat-equal -Wswitch-default -Wduplicated-branches -Wduplicated-cond -Wsign-conversion
+DEBUG = -g -Wpedantic -Wcast-qual -Wfloat-equal -Wswitch-default -Wsign-conversion
 # SANITIZERS = -fsanitize=address,undefined,leak -fno-omit-frame-pointer
 SANITIZERS = -fsanitize=undefined -fno-omit-frame-pointer
 FAST = -march=native -O3 -ffast-math

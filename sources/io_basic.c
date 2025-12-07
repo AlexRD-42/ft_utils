@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 09:45:51 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/12/02 09:37:37 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/12/02 21:57:31 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,11 @@ ssize_t	ft_read_size(const char *filename)
 		bytes_total += bytes_read;
 		bytes_read = read(fd, buffer, sizeof(buffer));
 	}
-	if (bytes_read < 0)
-		return (-1);
 	close(fd);
-	return (bytes_total);
+	if (bytes_read == 0)
+		return (bytes_total);
+	else
+		return (-1);
 }
 
 // Receives and endptr to a buffer guaranteed to hold size of number
@@ -75,7 +76,7 @@ uint64_t	ft_atoi_hex(const char *str)
 	return (number);
 }
 
-ssize_t	ft_putnchar(const char c, int fd, size_t length)
+ssize_t	ft_putnchar(char c, int fd, size_t length)
 {
 	size_t			i;
 	ssize_t			bytes;
@@ -83,8 +84,8 @@ ssize_t	ft_putnchar(const char c, int fd, size_t length)
 
 	i = 0;
 	bytes = 0;
-	buffer[0] = (0x0101010101010101 & UINTPTR_MAX) * (const size_t) c;
-	while (length > sizeof(size_t) && i < 256 / sizeof(size_t))
+	buffer[0] = (0x0101010101010101 & UINTPTR_MAX) * (size_t) c;
+	while (i < 256 / sizeof(size_t))
 		buffer[i++] = buffer[0];
 	while (length >= 256)
 	{
