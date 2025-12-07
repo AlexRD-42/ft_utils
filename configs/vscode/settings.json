@@ -1,0 +1,69 @@
+{
+    "explorer.compactFolders": false,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "42header.username": "adeimlin",
+    "42header.email": "adeimlin@student.42porto.com",
+    "editor.insertSpaces": false,
+	"editor.detectIndentation": false,
+	"git.enableSmartCommit": true,
+	"git.confirmSync": false,
+	"workbench.iconTheme": "material-icon-theme",
+	"explorer.confirmDragAndDrop": false,
+	"explorer.confirmDelete": false,
+	"editor.minimap.enabled": false,
+	"editor.inlineSuggest.enabled": false,
+		// {"scope": "entity.name.type, entity.name.class, entity.name.struct, entity.name.enum", "settings": { "foreground": "#4EC9B0"}},
+		// {"scope": "variable.parameter", "settings": { "foreground": "#ffffff"}},
+		// {"scope": "variable.other.member", "settings": { "foreground": "#9CDCFE"}},
+		// {"scope": "storage.type", "settings": { "foreground": "#569CD6"}},
+		// {"scope": "support.type", "settings": { "foreground": "#569CD6"}},
+	// blue #4FC3F7, yellow, #FFE0B2, ice #9ad9e2, red #FF6B6B
+	// default blue type: #569CD6
+	// default pink keyword: #D8A0DF
+	// default cyan type: #4EC9B0
+	// default light cyan var: #9CDCFE 
+	"editor.tokenColorCustomizations":
+	{
+		"textMateRules":
+		[
+			{"scope": "comment", "settings": { "foreground": "#4fb44f"}},
+			{"scope": "storage.modifier", "settings": { "foreground": "#569CD6"}},
+			// {"scope": "keyword.control", "settings": { "foreground": "#D8A0DF"}},
+		]
+	},
+	"editor.semanticTokenColorCustomizations":
+	{
+		"enabled": true,
+		"rules":
+		{
+			"type":					"#569CD6",	// blue #569CD6, cyan #4EC9B0
+			"class":				"#4EC9B0",	// cyan #4EC9B0 
+			"property":				"#a7daf5",	// white #DADADA
+			"variable":				"#DADADA",	// light cyan #9CDCFE
+			"parameter":			"#9A9A9A", // grey #9A9A9A
+			// "variable.readonly":	"#e9cfa6",	// white #C8C8C8
+			// "parameter.readonly":	"#dbccb4",	// grey #9A9A9A
+		}
+	},
+	"workbench.colorCustomizations":
+	{
+		// "editor.selectionHighlightBorder": "#0004ff",
+		// "editor.wordHighlightBorder": "#ff9800",
+		// "editor.wordHighlightStrongBorder": "#15ff00",
+		// "editor.selectionHighlightBackground": "#8a060600",
+	},
+	"github.copilot.chat.agent.runTasks": false,
+	"github.copilot.editor.enableCodeActions": false,
+	"github.copilot.chat.codeGeneration.useInstructionFiles": false,
+	"github.copilot.editor.enableAutoCompletions": false,
+	"github.copilot.advanced": {"authPermissions": "minimal"},
+	"C_Cpp.copilotHover": "disabled",
+	"workbench.activityBar.location": "top",
+	"explorer.confirmPasteNative": false,
+	"debug.autoExpandLazyVariables": "on",
+	"terminal.integrated.enableMultiLinePasteWarning": "never",
+	"git.openRepositoryInParentFolders": "never",
+	"workbench.colorTheme": "Visual Studio Dark - C++",
+	"editor.inlayHints.enabled": "off",
+	"github.copilot.nextEditSuggestions.enabled": true,
+}
