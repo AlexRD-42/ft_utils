@@ -6,13 +6,14 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 11:44:46 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/12/01 10:40:17 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/12/07 21:36:31 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <threads.h>
 
 size_t	ft_strlen(const char *str)
 {
@@ -53,8 +54,8 @@ char	*ft_strvcpy_stt(
 	const char **restrict	vec	/*null terminated array of cstrings*/,
 	char *restrict			end	/*end = pointer to the end of the buffer*/)
 {
-	static _Thread_local const char	*restrict	src = NULL;
-	static _Thread_local size_t					local_index = 0;
+	static thread_local const char	*restrict	src = NULL;
+	static thread_local size_t					local_index = 0;
 	size_t										length;
 	size_t										space_left;
 

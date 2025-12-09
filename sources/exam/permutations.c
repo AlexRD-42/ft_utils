@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nqueens2.c                                         :+:      :+:    :+:   */
+/*   permutations.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/08 18:08:32 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/12/08 18:45:47 by adeimlin         ###   ########.fr       */
+/*   Created: 2025/12/08 15:49:54 by adeimlin          #+#    #+#             */
+/*   Updated: 2025/12/08 16:23:06 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <string.h>
-#include <stdlib.h>
 
 static inline
 void	set_lut(size_t *lut, size_t *perm, size_t length, size_t max_size)
@@ -87,55 +85,89 @@ bool	next_perm(size_t *perm, size_t perm_size, size_t max_size)
 	return (true);
 }
 
-bool	check_seq(size_t *seq, size_t length)
+size_t	ft_strlen(const char *str)
 {
-	size_t	x = 0;
-	size_t	y = 0;
+	const char	*ostr = str;
 
-	while (x < length)
-	{
-		y = 0;
-		while (y < x)
-		{
-			if (x != y)
-			{
-				if (seq[x] == seq[y])
-					return (false);
-				if ((seq[x] - seq[y] == x - y) || (seq[x] - seq[y] == y - x))
-					return (false);
-			}
-			y++;
-		}
-		x++;
-	}
-	return (true);
+	while (*str != 0)
+		str++;
+	return ((size_t)(str - ostr));
 }
 
-void	ft_print(size_t *sequence, size_t length)
+void	ft_putstr(const char *str, size_t length, size_t *buffer)
 {
-	for (size_t i = 0; i < length - 1; i++)
+	size_t	i;
+	char	perm_str[64];
+
+	i = 0;
+	while (i < length)
 	{
-		fprintf(stdout, "%zu ", sequence[i]);
+		perm_str[i] = str[buffer[i]];
+		i++;
 	}
-	fprintf(stdout, "%zu \n", sequence[length - 1]);
+	perm_str[i++] = '\n';
+	write(1, perm_str, i);
+}
+
+char	get_min(char *str, size_t length)
+{
+	char	min;
+	size_t	min_index = 0;
+	size_t	i;
+
+	i = 0;
+	while (i < length)
+	{
+		if (str[i] != 0 && str[i] < str[min_index])
+			min_index = i;
+		i++;
+	}
+	min = str[min_index];
+	str[min_index] = 127;
+	return (min);
+}
+
+void	ft_memcpy(char *dst, const char *src, size_t length)
+{
+	while (length > 0)
+	{
+		*dst++ = *src++;
+		length--;
+	}
+}
+
+void	sort_str(const char *str, size_t length, char *new_str)
+{
+	char	str_buffer[64];
+	size_t	i;
+
+	ft_memcpy(str_buffer, str, length + 1);
+	i = 0;
+	while (i < length)
+	{
+		new_str[i] = get_min(str_buffer, length);
+		i++;
+	}
+	new_str[i] = 0;
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	// if (argc != 2)
-	// 	return (write(1, "\n", 1), 1);
-	// size_t 	length = (size_t) atoi(argv[1]);
-	size_t	length = 3;
-	size_t	buffer[64];
+	const char	*str = "cab";
+	size_t		buffer[64];
+	size_t 		length = ft_strlen(str);
+	size_t		i;
+	char		sorted_str[64];
 
-	for (size_t i = 0; i < 64; i++)
-		buffer[i] = i;
-	while (true)
+	sort_str(str, length, sorted_str);
+	i = 0;
+	while (i < 64)
 	{
-		if (check_seq(buffer, length))
-			ft_print(buffer, length);
-		if (next_perm(buffer, length, length) == false)
-			break ;
+		buffer[i] = i;
+		i++;
 	}
+	ft_putstr(sorted_str, length, buffer);
+	while (next_perm(buffer, length, length))
+		ft_putstr(sorted_str, length, buffer);
 	return (0);
 }

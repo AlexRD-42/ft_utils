@@ -9,7 +9,7 @@ VPATH = sources sources/utils sources/exam
 
 # Files --------------------------------------- #
 LIBS =
-SRCS = combn.c
+SRCS = rip_2.c
 BONUS_SRCS = 
 OBJS = $(addprefix $(OBJ_PATH)/, $(SRCS:.c=.o))
 

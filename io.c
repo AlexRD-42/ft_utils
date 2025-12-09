@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:50:30 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/12/05 09:11:36 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/12/08 10:25:07 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ ssize_t	ft_writev(int fd, const char **vec, char endl)
 // Returned result is not re_entrant
 char	*ft_itoa_stt(int64_t number)
 {
-	static thread_local char	buffer[32];
+	static thread_local char	buffer[24];
 	char						*ptr;
 	const int8_t				sign = (number >= 0) - (number < 0);
 
-	ptr = buffer + 31;
+	ptr = buffer + 23;
 	*ptr = 0;
 	*(--ptr) = sign * (number % 10) + '0';
 	number = sign * (number / 10);
@@ -74,21 +74,34 @@ char	*ft_itoa_stt(int64_t number)
 	return (ptr);
 }
 
-char	*ft_itoa_r(int64_t number, char *ptr)
+// This function fills a buffer with up to 24 ascii digits and null terminates
+// Returns the length of the number
+size_t	ft_itoa_r(int64_t number, char *ptr)
 {
+	char			buffer[24];
+	char			*wptr;
 	const int8_t	sign = (number >= 0) - (number < 0);
+	const char		*optr = ptr;
+	size_t			length;
 
-	*ptr = 0;
-	*(--ptr) = sign * (number % 10) + '0';
+	wptr = buffer + sizeof(buffer) - 1;
+	*wptr = 0;
+	*(--wptr) = sign * (number % 10) + '0';
 	number = sign * (number / 10);
 	while (number != 0)
 	{
-		*(--ptr) = (number % 10) + '0';
+		*(--wptr) = (number % 10) + '0';
 		number /= 10;
 	}
 	if (sign == -1)
-		*(--ptr) = '-';
-	return (ptr);
+		*(--wptr) = '-';
+	length = (size_t)((buffer + sizeof(buffer)) - wptr); // Copies \0
+	while (length > 0)
+	{
+		*ptr++ = *wptr++;
+		length--;
+	}
+	return ((size_t)(ptr - optr) - 1);
 }
 
 // To do: set errno on overflow

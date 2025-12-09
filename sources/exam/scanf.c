@@ -1,103 +1,99 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_scanf.c                                         :+:      :+:    :+:   */
+/*   scanf.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/03 10:06:41 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/12/03 11:59:07 by adeimlin         ###   ########.fr       */
+/*   Created: 2025/12/08 15:15:24 by adeimlin          #+#    #+#             */
+/*   Updated: 2025/12/08 15:40:04 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdint.h>
-#include <stddef.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <ctype.h>
 
 int match_space(FILE *f)
 {
-	int new_c = fgetc(f);
+	int	c;
 
-	while (new_c != EOF && isspace(new_c))
-		new_c = fgetc(f);
-	if (new_c == EOF)
+	c = fgetc(f);
+	while (isspace((char) c))
+		c = fgetc(f);
+	if (c == EOF)
 		return (-1);
-	ungetc(new_c, f);
-	return (0);	
+	ungetc(c, f);
+    return (0);
 }
 
 int match_char(FILE *f, char c)
 {
-	int new_c = fgetc(f);
+	int	new_c;
 
-	if ((char)new_c == c)
+	new_c = fgetc(f);
+	if ((char) new_c == c)
 		return (1);
-	if (new_c != EOF)
-		ungetc(new_c, f);
-	return (0);
+    return (0);
 }
 
 int scan_char(FILE *f, va_list ap)
 {
-	int new_c = fgetc(f);
-	char *c = (char *) va_arg(ap, char *);
+	int		c = fgetc(f);
+	char	*ptr;
 
-	if (new_c == EOF)
+	if (c == EOF)
 		return (0);
-	*c = (char) new_c;
-	return (1);
+	ptr = (char *) va_arg(ap, char *);
+	*ptr = (char) c;
+    return (1);
 }
 
 int scan_int(FILE *f, va_list ap)
 {
-	int		new_c;
 	int		sign = -1;
-	int		*number = (int *) va_arg(ap, int*);
+	char	c;
+	int		*number = (int *) va_arg(ap, int *);
 
-	new_c = fgetc(f);
-	if (new_c == EOF)
-		return (EOF);
 	*number = 0;
-	if (new_c == '+')
-		new_c = fgetc(f);
-	if (new_c == '-')
+	c = (char) fgetc(f);
+	if (c == '-')
 	{
-		new_c = fgetc(f);
 		sign = -sign;
+		c = (char) fgetc(f);
 	}
-	while(new_c != EOF && isdigit(new_c))
+	else if (c == '+')
+		c = (char) fgetc(f);
+	if (!(c >= '0' && c <= '9'))
+		return (0);
+	while (c >= '0' && c <= '9')
 	{
-		*number = *number * 10 - ((char)new_c - '0');
-		new_c = fgetc(f);
+		*number = *number * 10 - (c - '0'); 
+		c = (char) fgetc(f);
 	}
-	if (new_c != EOF)
-		ungetc(new_c, f);
 	*number *= sign;
-	return (1);
+    return (1);
 }
 
 int scan_string(FILE *f, va_list ap)
 {
-	int		new_c;
-	char 	*buffer = (char *) va_arg(ap, char *);
-	size_t length;
+	size_t	i;
+	char	c;
+	char	*ptr = (char *) va_arg(ap, char *);
 
-	length = 0;
-	new_c = fgetc(f);
-	if (new_c == EOF)
-		return (EOF);
-	while (new_c != EOF && !isspace(new_c))
+	i = 0;
+	c = (char) fgetc(f);
+	if (c == EOF)
+		return (0);
+	while (c != EOF && !isspace(c) && c != 0)
 	{
-		buffer[length] = (char) new_c;
-		new_c = fgetc(f);
-		length++;
+		ptr[i] = c;
+		i++;
+		c = (char) fgetc(f);
 	}
-	buffer[length] = 0;
-	if (new_c != EOF)
-		ungetc(new_c, f);
-	return (length > 0);
+	if (c == 0)
+		ptr[i] = c;
+    return (1);
 }
 
 int	match_conv(FILE *f, const char **format, va_list ap)
@@ -155,11 +151,10 @@ int ft_vfscanf(FILE *f, const char *format, va_list ap)
 
 int ft_scanf(const char *format, ...)
 {
-	va_list ap;
-	int 	ret;
+	va_list	ap;
 
 	va_start(ap, format);
-	ret = ft_vfscanf(stdin, format, ap);
+	int ret = ft_vfscanf(stdin, format, ap);
 	va_end(ap);
 	return ret;
 }

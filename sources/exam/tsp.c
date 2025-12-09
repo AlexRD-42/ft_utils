@@ -1,22 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nqueens2.c                                         :+:      :+:    :+:   */
+/*   tsp.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/08 18:08:32 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/12/08 18:45:47 by adeimlin         ###   ########.fr       */
+/*   Created: 2025/12/08 17:21:04 by adeimlin          #+#    #+#             */
+/*   Updated: 2025/12/08 20:49:47 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <float.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <math.h>
+
+typedef struct
+{
+	float	x;
+	float	y;
+}	t_pos;
 
 static inline
 void	set_lut(size_t *lut, size_t *perm, size_t length, size_t max_size)
@@ -86,56 +95,58 @@ bool	next_perm(size_t *perm, size_t perm_size, size_t max_size)
 	overflow_fix(perm, i + 1, perm_size, max_size);
 	return (true);
 }
-
-bool	check_seq(size_t *seq, size_t length)
+// y - yo = m (x - xo)
+float	calc_distance(t_pos a, t_pos b)
 {
-	size_t	x = 0;
-	size_t	y = 0;
+	float dx = a.x - b.x;
+	float dy = a.y - b.y;
 
-	while (x < length)
-	{
-		y = 0;
-		while (y < x)
-		{
-			if (x != y)
-			{
-				if (seq[x] == seq[y])
-					return (false);
-				if ((seq[x] - seq[y] == x - y) || (seq[x] - seq[y] == y - x))
-					return (false);
-			}
-			y++;
-		}
-		x++;
-	}
-	return (true);
+	return (sqrtf(dx * dx + dy * dy));
 }
 
-void	ft_print(size_t *sequence, size_t length)
+float	calc_seq_dist(size_t *sequence, float best_dist, size_t length, t_pos *pos)
 {
-	for (size_t i = 0; i < length - 1; i++)
+	size_t	i;
+	float	total_distance = 0.0f;
+
+	i = 1;
+	while (i < length)
 	{
-		fprintf(stdout, "%zu ", sequence[i]);
+		total_distance += calc_distance(pos[sequence[i - 1]], pos[sequence[i]]);
+		if (total_distance > best_dist)
+			return (FLT_MAX);
+		i++;
 	}
-	fprintf(stdout, "%zu \n", sequence[length - 1]);
+	total_distance += calc_distance(pos[sequence[i]], pos[sequence[0]]);
+	return (total_distance);
+}
+
+float	get_best_distance(t_pos *pos, size_t length)
+{
+	size_t	sequence[12];
+	float	cur_dist;
+	float	best_dist = FLT_MAX;
+
+	for (size_t i = 0; i < 12; i++)
+		sequence[i] = i;
+	best_dist = calc_seq_dist(sequence, best_dist, length, pos);
+	while (next_perm(sequence, length, length))
+	{
+		cur_dist = calc_seq_dist(sequence, best_dist, length, pos);
+		if (cur_dist < best_dist)
+			best_dist = cur_dist;
+	}
+	return (best_dist);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	// if (argc != 2)
-	// 	return (write(1, "\n", 1), 1);
-	// size_t 	length = (size_t) atoi(argv[1]);
-	size_t	length = 3;
-	size_t	buffer[64];
+	t_pos	pos[12];
+	size_t	i;
 
-	for (size_t i = 0; i < 64; i++)
-		buffer[i] = i;
-	while (true)
-	{
-		if (check_seq(buffer, length))
-			ft_print(buffer, length);
-		if (next_perm(buffer, length, length) == false)
-			break ;
-	}
+	i = 0;
+	while (i < 12 && fscanf(stdin, "%f, %f\n", &pos[i].x, &pos[i].y) == 2)
+		i++;
+	printf("%.2f", get_best_distance(pos, i));
 	return (0);
 }
